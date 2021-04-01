@@ -10,6 +10,9 @@ const Container = styled.div`
   height: 300px;
   background: blue;
   margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  flex-shrink: 0;
 `;
 
 export default function Card(props: Props) {

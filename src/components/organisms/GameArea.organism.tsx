@@ -1,58 +1,62 @@
 import React from 'react';
 import styled from 'styled-components';
 import Card from "../molecules/Card.molecule";
-import CardClass from "../../classes/Card.class";
-import useDeck from "../../hooks/useDeck.hook";
+import useDeck, { GAME_STATES } from "../../hooks/useDeck.hook";
 
-const TARGET = 21;
-
+// STYLING
 const Area = styled.div``;
 const DrawnCards = styled.div`
   display: flex;
+  width: 100%;
+  overflow-y: auto;
 `;
 
+// COMPONENT
 export default function GameArea() {
-  const currentDeck = useDeck();
-  const [total, setTotal] = React.useState(0);
-  const [highscore, setHighscore] = React.useState(total);
-  const [score, setScore] = React.useState(0);
+  const {
+    startGame,
+    drawnCards,
+    total,
+    score,
+    gameState,
+    drawNewCard,
+  } = useDeck();
 
-  const WINNER = total === TARGET;
-  const LOSER = total > TARGET;
+  React.useEffect(() => {
+    startGame();
+  }, []);
 
-  const handleDrawCard = React.useCallback(() => {
-    const drawACard = async () => {
-      if (currentDeck) {
-        await currentDeck.drawACard();
-        setTotal(currentDeck.fetchTotal());
-        setScore(currentDeck.totalCards());
-      }
+  const displayGameState = () => {
+    switch(gameState) {
+      case GAME_STATES.WINNER:
+        return <div>U R WINNA</div>;
+      case GAME_STATES.BUST:
+        return <div>U R LOSA</div>;
     }
-    drawACard();
-  }, [currentDeck]);
+  }
 
-  const checkIfHighscore = React.useCallback(() => {
-    if (score < highscore) {
-      setHighscore(score);
+  const displayGameButton = () => {
+    switch(gameState) {
+      case GAME_STATES.WINNER:
+        return <button onClick={startGame}>Play again?</button>;
+      case GAME_STATES.BUST:
+        return <button onClick={startGame}>Try again?</button>;
+      default:
+        return <button onClick={drawNewCard}>Draw {score > 0 && 'another '}card</button>;
     }
-  }, [highscore, currentDeck, score]);
-
-  if (WINNER) { // Player has reached 21!
-    checkIfHighscore();
   }
 
   return ( // Game currently at play!
     <Area>
-      {WINNER && <div>YOU GOT 21!! your score was {score} and the best was {highscore}</div>}
-      {LOSER && <div>BUST!</div>}
       <div>score: {score}</div>
-      {total}
+      <div>total: {total}</div>
+      {displayGameState()}
       <DrawnCards>
-        {currentDeck?.drawnCards.map(({ id, name }) => (
+        {drawnCards.map(({ id, name }) => (
           <Card key={id} name={name} />
         ))}
       </DrawnCards>
-      <button onClick={handleDrawCard}>CLICK ME</button>
+      {displayGameButton()}
     </Area>
   );
 };

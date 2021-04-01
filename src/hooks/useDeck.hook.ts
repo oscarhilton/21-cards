@@ -1,25 +1,61 @@
 import React from 'react';
-import Api from "../services/api.service";
 import Deck from "../classes/Deck.class";
+import Card from "../classes/Card.class";
 
-interface newDeckResponse {
-  success: boolean,
-  deck_id: string,
-  remaining: number;
-  shuffled: boolean;
+interface stateInstance {
+  deck: string | null,
+  drawnCards: Card[],
+  valueTotal: number,
+  score: number,
 }
 
-export default function useDeck() {
-  const [currentDeck, setCurrentDeck] = React.useState<Deck| null>();
-  const returnBrandNewDeck = (numberOfDecks: number = 1) => Api.getNewDeck(numberOfDecks);
-  
-  React.useEffect(() => {
-    const freshDeckFromApi = async () => {
-      const res = <newDeckResponse> await returnBrandNewDeck();
-      setCurrentDeck(new Deck(res.deck_id));
-    };
-    freshDeckFromApi();
-  }, []);
+const INITIAL_STATE = <stateInstance> {
+  deck: null,
+  drawnCards: [],
+  valueTotal: 0,
+  score: 0,
+};
 
-  return currentDeck;
+const TARGET = 21;
+export const GAME_STATES = {
+  IDLE: "idle",
+  PLAYING: "playing",
+  BUST: "bust",
+  WINNER: "winner",
+};
+
+export default function useDeck() {
+  const [deck, setDeck] = React.useState(INITIAL_STATE.deck);
+  const [drawnCards, setDrawnCards] = React.useState(INITIAL_STATE.drawnCards);
+
+  const fetchNewDeck = async (numberOfDecks: number) => {
+    setDeck(await Deck.brandNewDeck(numberOfDecks));
+  };
+
+  const drawNewCard = async () => {
+    if (!deck) return;
+    setDrawnCards([...drawnCards, await Deck.drawACard(deck)]);
+  };
+
+  const total = React.useMemo(() => Deck.fetchTotal(drawnCards), [drawnCards]);
+  const score = React.useMemo(() => Deck.getNumberOfCardsDrawn(drawnCards), [drawnCards]);
+  const gameState = React.useMemo(() => {
+    if (total === TARGET) return GAME_STATES.WINNER;
+    if (total > TARGET) return GAME_STATES.BUST;
+    return GAME_STATES.PLAYING;
+  }, [total]);
+
+  const startGame = () => {
+    setDrawnCards(INITIAL_STATE.drawnCards);
+    fetchNewDeck(1);
+  }
+
+  return {
+    startGame,
+    drawnCards,
+    total,
+    score,
+    gameState,
+    drawNewCard,
+  };
 }
