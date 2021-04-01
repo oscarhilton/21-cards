@@ -59,15 +59,14 @@ export default function Card(props: Props) {
   }
 
   const cardSymbol = returnFirstLetterIfNotANumericCard(props.name);
+  const numberOfSuitSymbols = firstLetterIsANumber ? parseInt(cardSymbol, 10) : 1;
 
   return (
     <Container symbol={cardSymbol} >
       <SuitHolder>
-        {firstLetterIsANumber ? (
-          new Array(parseInt(props.name, 10)).fill(null).map(i => <SuitIcon suit={props.suit} large={false} />)
-        ) : (
-          <SuitIcon suit={props.suit} large />
-        )}
+          {new Array(numberOfSuitSymbols).fill(null).map((_, index) => (
+            <SuitIcon suit={props.suit} large={!firstLetterIsANumber} rotate={index > 3 && index + 1 > numberOfSuitSymbols / 2} />
+          ))}
       </SuitHolder>
     </Container>
   );
