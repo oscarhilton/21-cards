@@ -52,8 +52,8 @@ export default function GameArea() {
       <div>total: {total}</div>
       {displayGameState()}
       <DrawnCards>
-        {drawnCards.map(({ id, name }) => (
-          <Card key={id} name={name} />
+        {drawnCards.map(({ id, name, suit }) => (
+          <Card key={id} name={name} suit={suit} />
         ))}
       </DrawnCards>
       {displayGameButton()}
