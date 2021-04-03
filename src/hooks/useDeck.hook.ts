@@ -2,20 +2,6 @@ import React from 'react';
 import Deck from "classes/Deck.class";
 import Card from "classes/Card.class";
 
-interface stateInstance {
-  deck: string | null,
-  drawnCards: Card[],
-  valueTotal: number,
-  score: number,
-}
-
-const INITIAL_STATE = <stateInstance> {
-  deck: null,
-  drawnCards: [],
-  valueTotal: 0,
-  score: 0,
-};
-
 const TARGET = 21;
 export const GAME_STATES = {
   IDLE: "idle",
@@ -59,3 +45,17 @@ export default function useDeck() {
     drawNewCard,
   };
 }
+
+interface stateInstance {
+  deck: string | null,
+  drawnCards: Card[],
+  valueTotal: number,
+  score: number,
+}
+
+const INITIAL_STATE = <stateInstance> {
+  deck: null,
+  drawnCards: [],
+  valueTotal: 0,
+  score: 0,
+};

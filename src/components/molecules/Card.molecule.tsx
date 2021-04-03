@@ -2,44 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 import SuitIcon from "components/atoms/SuitIcon.atom";
 import { useSpring, animated, config } from 'react-spring';
-interface Props {
-  name: string;
-  suit: string;
-  startingRotation: number;
-  endingRotation: number;
-}
-
-interface styledProps {
-  symbol: string;
-}
-
-const Container = styled(animated.div)`
-  width: 200px;
-  height: 300px;
-  background: white;
-  margin: 5px;
-  padding: 10px;
-  border-radius: 5px;
-  flex-shrink: 0;
-  position: relative;
-  display: flex;
-  align-items: center;
-
-  &::before, &::after {
-    content: ${(p: styledProps)  => p.symbol ? `'${p.symbol}'` : 'none'};
-    display: block;
-    background: transparent;
-    position: absolute;
-    top: 14px;
-    left: 14px;
-    bottom: 14px;
-    right: 14px;
-  }
-
-  &::after {
-    transform: rotate(180deg);
-  }
-`;
 
 const SuitHolder = styled.div`
   width: 80%;
@@ -79,9 +41,48 @@ export default function Card(props: Props) {
     <Container style={animationProps} symbol={cardSymbol} >
       <SuitHolder>
           {new Array(numberOfSuitSymbols).fill(null).map((_, index) => (
-            <SuitIcon suit={props.suit} large={!firstLetterIsANumber} rotate={index > 3 && index + 1 > numberOfSuitSymbols / 2} />
+            <SuitIcon key={index} suit={props.suit} large={!firstLetterIsANumber} rotate={(index > 3 ) && (index + 1 > numberOfSuitSymbols / 2 )} />
           ))}
       </SuitHolder>
     </Container>
   );
 };
+
+interface Props {
+  name: string;
+  suit: string;
+  startingRotation: number;
+  endingRotation: number;
+}
+
+interface styledProps {
+  symbol: string;
+}
+
+const Container = styled(animated.div)`
+  width: 200px;
+  height: 300px;
+  background: white;
+  margin: 5px;
+  padding: 10px;
+  border-radius: 5px;
+  flex-shrink: 0;
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  &::before, &::after {
+    content: ${(p: styledProps)  => p.symbol ? `'${p.symbol}'` : 'none'};
+    display: block;
+    background: transparent;
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    bottom: 14px;
+    right: 14px;
+  }
+
+  &::after {
+    transform: rotate(180deg);
+  }
+`;

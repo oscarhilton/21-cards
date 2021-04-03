@@ -3,28 +3,6 @@ import styled from 'styled-components';
 import Card from "components/molecules/Card.molecule";
 import useDeck, { GAME_STATES } from "hooks/useDeck.hook";
 
-// STYLING
-const Area = styled.div`
-  background: blue;
-  overflow: hidden;
-`;
-const DrawnCards = styled.div`
-  position: relative;
-  width: 100%;
-  height: 600px;
-`;
-const CardContainer = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  margin: auto;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`;
-
 // COMPONENT
 export default function GameArea() {
   const {
@@ -52,27 +30,69 @@ export default function GameArea() {
   const displayGameButton = () => {
     switch(gameState) {
       case GAME_STATES.WINNER:
-        return <button onClick={startGame}>Play again?</button>;
+        return <GameButton onClick={startGame}>Play again?</GameButton>;
       case GAME_STATES.BUST:
-        return <button onClick={startGame}>Try again?</button>;
+        return <GameButton onClick={startGame}>Try again?</GameButton>;
       default:
-        return <button onClick={drawNewCard}>Draw {score > 0 && 'another '}card</button>;
+        return <GameButton onClick={drawNewCard}>Draw {score > 0 && 'another '}card</GameButton>;
     }
   }
 
   return ( // Game currently at play!
     <Area>
-      <div>score: {score}</div>
-      <div>total: {total}</div>
-      {displayGameState()}
       <DrawnCards>
+        <div>total: {total}</div>
+        {displayGameState()}
         {drawnCards.map(({ id, name, suit, startingRotation, endingRotation }) => (
           <CardContainer key={id}>
             <Card name={name} suit={suit} startingRotation={startingRotation} endingRotation={endingRotation} />
           </CardContainer>
         ))}
       </DrawnCards>
+      <div>score: {score}</div>
       {displayGameButton()}
     </Area>
   );
 };
+
+// STYLING
+const Area = styled.div`
+  min-height: 100vh;
+`;
+const DrawnCards = styled.div`
+  position: relative;
+  width: 100%;
+  height: 600px;
+  background: blue;
+  overflow: hidden;
+`;
+const CardContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+const GameButton = styled.button`
+  position: relative;
+  background: yellow;
+  border: 0;
+  padding: 20px 60px;
+  border-radius: 5px;
+  box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2);
+  transform: translateY(0);
+  transition: transform 0.2s, box-shadow 0.2s;
+
+  &:hover {
+    box-shadow: 0px 2px 0px rgba(0, 0, 0, 0);
+    transform: translateY(2px);
+  }
+
+  &:focus {
+    outline:0;
+  }
+`;
