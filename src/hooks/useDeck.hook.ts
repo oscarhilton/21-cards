@@ -1,6 +1,6 @@
 import React from 'react';
-import Deck from "../classes/Deck.class";
-import Card from "../classes/Card.class";
+import Deck from "classes/Deck.class";
+import Card from "classes/Card.class";
 
 interface stateInstance {
   deck: string | null,

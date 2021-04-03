@@ -1,17 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
-import SuitIcon from "../atoms/SuitIcon.atom";
-
+import SuitIcon from "components/atoms/SuitIcon.atom";
+import { useSpring, animated, config } from 'react-spring';
 interface Props {
   name: string;
   suit: string;
+  startingRotation: number;
+  endingRotation: number;
 }
 
 interface styledProps {
   symbol: string;
 }
 
-const Container = styled.div`
+const Container = styled(animated.div)`
   width: 200px;
   height: 300px;
   background: white;
@@ -51,6 +53,18 @@ const SuitHolder = styled.div`
 `;
 
 export default function Card(props: Props) {
+  const animationProps = useSpring({
+    from: {
+      transform: `scale(3) rotate(${props.startingRotation}deg) translate(100%, 100%)`,
+      boxShadow: '10px 10px 20px rgba(0, 0, 0, 0.2)',
+    },
+    to: {
+      transform: `scale(1) rotate(${props.endingRotation}deg) translate(0, 0)`,
+      boxShadow: '0px 0px 3px rgba(0, 0, 0, 0.2)',      
+    },
+    config: config.default
+  });
+
   const firstLetterIsANumber = !isNaN(parseInt(props.name.charAt(0), 10));
 
   const returnFirstLetterIfNotANumericCard = (name: string) => {
@@ -62,7 +76,7 @@ export default function Card(props: Props) {
   const numberOfSuitSymbols = firstLetterIsANumber ? parseInt(cardSymbol, 10) : 1;
 
   return (
-    <Container symbol={cardSymbol} >
+    <Container style={animationProps} symbol={cardSymbol} >
       <SuitHolder>
           {new Array(numberOfSuitSymbols).fill(null).map((_, index) => (
             <SuitIcon suit={props.suit} large={!firstLetterIsANumber} rotate={index > 3 && index + 1 > numberOfSuitSymbols / 2} />

@@ -1,4 +1,4 @@
-const PUBLIC_IMAGES_FOLDER = "/images/";
+const PUBLIC_IMAGES_FOLDER = __dirname + "images/";
 
 export default function cardSuitToImagePath(cardSuit: string): string {
   if (!cardSuit) throw new Error("No suit was passed!");

@@ -1,14 +1,28 @@
 import React from 'react';
 import styled from 'styled-components';
-import Card from "../molecules/Card.molecule";
-import useDeck, { GAME_STATES } from "../../hooks/useDeck.hook";
+import Card from "components/molecules/Card.molecule";
+import useDeck, { GAME_STATES } from "hooks/useDeck.hook";
 
 // STYLING
-const Area = styled.div``;
+const Area = styled.div`
+  background: blue;
+  overflow: hidden;
+`;
 const DrawnCards = styled.div`
-  display: flex;
+  position: relative;
   width: 100%;
-  overflow-y: auto;
+  height: 600px;
+`;
+const CardContainer = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;
 
 // COMPONENT
@@ -52,8 +66,10 @@ export default function GameArea() {
       <div>total: {total}</div>
       {displayGameState()}
       <DrawnCards>
-        {drawnCards.map(({ id, name, suit }) => (
-          <Card key={id} name={name} suit={suit} />
+        {drawnCards.map(({ id, name, suit, startingRotation, endingRotation }) => (
+          <CardContainer key={id}>
+            <Card name={name} suit={suit} startingRotation={startingRotation} endingRotation={endingRotation} />
+          </CardContainer>
         ))}
       </DrawnCards>
       {displayGameButton()}

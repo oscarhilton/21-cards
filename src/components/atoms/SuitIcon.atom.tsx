@@ -16,10 +16,12 @@ interface IconProps {
 const Icon = styled.div`
   width: ${(p: IconProps) => p.large ? "60px" : "30px"};
   height: ${(p: IconProps) => p.large ? "60px" : "30px"};
-  background-image: url(${(p: IconProps) => p.icon });
   transform: rotate(${(p: IconProps) => p.rotate ? "180" : "0"}deg);
+  background: blue;
   background-size: cover;
   margin: 10px;
+  mask: url(${(p: IconProps) => p.icon }) no-repeat center / contain;
+  -webkit-mask: url(${(p: IconProps) => p.icon }) no-repeat center / contain;
 `;
 
 export default function SuitIcon(props: Props) {
