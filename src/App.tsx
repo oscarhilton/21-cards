@@ -5,7 +5,7 @@ import defaultTheme from "./themes/defaultTheme.theme";
 import GameArea from "components/organisms/GameArea.organism";
 
 function App() {
-  const [theme, setTheme] = React.useState(defaultTheme);
+  const [theme] = React.useState(defaultTheme);
   return (
     <div className="App">
       <ThemeProvider theme={theme}>

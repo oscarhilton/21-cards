@@ -87,7 +87,7 @@ const CentralText = styled.div`
 `;
 const Total = styled(CentralText)`
   z-index: 10;
-  opacity: 0.2;
+  opacity: 0.6;
   font-size: 30vh;
   color: ${p => p.theme.gameScoreText};
 `;

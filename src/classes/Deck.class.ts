@@ -1,6 +1,6 @@
-import api, { newDeckResponse, newCardResponse, cardObject } from "services/api.service";
+import api, { newDeckResponse, newCardResponse, cardObject } from "../services/api.service";
 import Card from "./Card.class";
-import cardValueToNumericValue from "helpers/cardValueToNumericValue.helper";
+import cardValueToNumericValue from "../helpers/cardValueToNumericValue.helper";
 
 export default class Deck {
   static async brandNewDeck(numberOfDecks: number): Promise<string> {
