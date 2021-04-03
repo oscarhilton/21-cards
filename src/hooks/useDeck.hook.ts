@@ -9,10 +9,18 @@ export const GAME_STATES = {
   BUST: "bust",
   WINNER: "winner",
 };
+const INITIAL_STATE = <stateInstance> {
+  deck: null,
+  drawnCards: [],
+  valueTotal: 0,
+  score: 0,
+  highScore: 0,
+};
 
 export default function useDeck() {
   const [deck, setDeck] = React.useState(INITIAL_STATE.deck);
   const [drawnCards, setDrawnCards] = React.useState(INITIAL_STATE.drawnCards);
+  const [highScore, setHighScore] = React.useState(INITIAL_STATE.highScore);
 
   const fetchNewDeck = async (numberOfDecks: number) => {
     setDeck(await Deck.brandNewDeck(numberOfDecks));
@@ -31,6 +39,14 @@ export default function useDeck() {
     return GAME_STATES.PLAYING;
   }, [total]);
 
+  React.useEffect(() => {
+    if (gameState === GAME_STATES.WINNER) {
+      if (score > highScore) {
+        setHighScore(score);
+      }
+    }
+  }, [gameState, score, highScore]);
+
   const startGame = () => {
     setDrawnCards(INITIAL_STATE.drawnCards);
     fetchNewDeck(1);
@@ -41,6 +57,7 @@ export default function useDeck() {
     drawnCards,
     total,
     score,
+    highScore,
     gameState,
     drawNewCard,
   };
@@ -51,11 +68,5 @@ interface stateInstance {
   drawnCards: Card[],
   valueTotal: number,
   score: number,
+  highScore: number,
 }
-
-const INITIAL_STATE = <stateInstance> {
-  deck: null,
-  drawnCards: [],
-  valueTotal: 0,
-  score: 0,
-};

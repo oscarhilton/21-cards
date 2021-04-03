@@ -6,11 +6,19 @@ const api = ky.create({ prefixUrl: DECK_OF_CARDS_API });
 // API Services:
 export default class Api {
   static async getNewDeck(deckCount: number = 1) {
-    return await api.get(`deck/new/shuffle/?deck_count=${deckCount}`).json();
+    try {
+      return await api.get(`deck/new/shuffle/?deck_count=${deckCount}`).json();
+    } catch (e) {
+      return e;
+    }
   }
 
   static async drawACard(deckId: string, amountOfCards: number = 1) {
-    return await api.get(`deck/${deckId}/draw/?count=${amountOfCards}`).json();
+    try {
+      return await api.get(`deck/${deckId}/draw/?count=${amountOfCards}`).json();
+    } catch (e) {
+      return e;
+    }
   }
 }
 

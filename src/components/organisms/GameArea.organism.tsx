@@ -10,6 +10,7 @@ export default function GameArea() {
     drawnCards,
     total,
     score,
+    highScore,
     gameState,
     drawNewCard,
   } = useDeck();
@@ -21,9 +22,9 @@ export default function GameArea() {
   const displayGameState = () => {
     switch(gameState) {
       case GAME_STATES.WINNER:
-        return <div>U R WINNA</div>;
+        return "You won!";
       case GAME_STATES.BUST:
-        return <div>U R LOSA</div>;
+        return "You went bust!";
     }
   }
 
@@ -40,17 +41,20 @@ export default function GameArea() {
 
   return ( // Game currently at play!
     <Area>
+      <HighScore>High Score: {highScore}</HighScore>
       <DrawnCards>
-        <div>total: {total}</div>
-        {displayGameState()}
+        <Total>{total}</Total>
+        {(gameState !== GAME_STATES.PLAYING) && <GameState>{displayGameState()}</GameState>}
         {drawnCards.map(({ id, name, suit, startingRotation, endingRotation }) => (
           <CardContainer key={id}>
             <Card name={name} suit={suit} startingRotation={startingRotation} endingRotation={endingRotation} />
           </CardContainer>
         ))}
       </DrawnCards>
-      <div>score: {score}</div>
-      {displayGameButton()}
+      <Score>Current Score: {score}</Score>
+      <ButtonContainer>
+        {displayGameButton()}
+      </ButtonContainer>
     </Area>
   );
 };
@@ -58,6 +62,41 @@ export default function GameArea() {
 // STYLING
 const Area = styled.div`
   min-height: 100vh;
+  position: relative;
+`;
+const HighScore = styled.div`
+  text-align: right;
+  padding: 30px;
+`;
+const Score = styled.div`
+  text-align: center;
+  padding: 30px;
+`;
+const CentralText = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: auto;
+  justify-content: center;
+  line-height: 1;
+`;
+const Total = styled(CentralText)`
+  z-index: 10;
+  opacity: 0.2;
+  font-size: 30vh;
+  color: ${p => p.theme.gameScoreText};
+`;
+const GameState = styled(CentralText)`
+  z-index: 10;
+  opacity: 1;
+  font-size: 5rem;
+  background: rgba(0, 0, 0, 0.4);
+  color: ${p => p.theme.gameStateText};
 `;
 const DrawnCards = styled.div`
   position: relative;
@@ -76,6 +115,10 @@ const CardContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+`;
+const ButtonContainer = styled.div`
+  text-align: center;
+  margin-bottom: 20px;
 `;
 const GameButton = styled.button`
   position: relative;
