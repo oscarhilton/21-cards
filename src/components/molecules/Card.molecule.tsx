@@ -3,17 +3,6 @@ import styled from 'styled-components';
 import SuitIcon from "components/atoms/SuitIcon.atom";
 import { useSpring, animated, config } from 'react-spring';
 
-const SuitHolder = styled.div`
-  width: 80%;
-  height: 80%;
-  margin: auto;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  flex-direction: row;
-  justify-content: space-around;
-`;
-
 export default function Card(props: Props) {
   const animationProps = useSpring({
     from: {
@@ -62,7 +51,7 @@ interface styledProps {
 const Container = styled(animated.div)`
   width: 200px;
   height: 300px;
-  background: white;
+  background: ${p => p.theme.cardColour};
   margin: 5px;
   padding: 10px;
   border-radius: 5px;
@@ -70,6 +59,7 @@ const Container = styled(animated.div)`
   position: relative;
   display: flex;
   align-items: center;
+  border: solid 4px ${p => p.theme.cardEdge};
 
   &::before, &::after {
     content: ${(p: styledProps)  => p.symbol ? `'${p.symbol}'` : 'none'};
@@ -85,4 +75,15 @@ const Container = styled(animated.div)`
   &::after {
     transform: rotate(180deg);
   }
+`;
+
+const SuitHolder = styled.div`
+  width: 80%;
+  height: 80%;
+  margin: auto;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  flex-direction: row;
+  justify-content: space-around;
 `;

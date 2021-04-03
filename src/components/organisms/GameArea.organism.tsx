@@ -63,7 +63,7 @@ const DrawnCards = styled.div`
   position: relative;
   width: 100%;
   height: 600px;
-  background: blue;
+  background: ${p => p.theme.gameArea};
   overflow: hidden;
 `;
 const CardContainer = styled.div`
@@ -79,7 +79,7 @@ const CardContainer = styled.div`
 `;
 const GameButton = styled.button`
   position: relative;
-  background: yellow;
+  background: ${p => p.theme.gameButton};
   border: 0;
   padding: 20px 60px;
   border-radius: 5px;

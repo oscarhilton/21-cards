@@ -6,7 +6,7 @@ const Icon = styled.div`
   width: ${(p: IconProps) => p.large ? "60px" : "30px"};
   height: ${(p: IconProps) => p.large ? "60px" : "30px"};
   transform: rotate(${(p: IconProps) => p.rotate ? "180" : "0"}deg);
-  background: blue;
+  background: ${p => p.theme.suits[p.suit.toLocaleLowerCase()]};
   background-size: cover;
   margin: 10px;
   mask: url(${(p: IconProps) => p.icon }) no-repeat center / contain;
@@ -15,7 +15,7 @@ const Icon = styled.div`
 
 export default function SuitIcon(props: Props) {
   return (
-    <Icon icon={cardSuitToImagePath(props.suit)} large={props.large} rotate={props.rotate && props.rotate} />
+    <Icon suit={props.suit} icon={cardSuitToImagePath(props.suit)} large={props.large} rotate={props.rotate && props.rotate} />
   )
 };
 interface Props {
@@ -28,4 +28,5 @@ interface IconProps {
   large: boolean;
   icon: string;
   rotate: boolean;
+  suit: string;
 }
