@@ -1,3 +1,20 @@
+# Running this application
+
+###### Stable node version
+
+`14.0+`
+###### Development mode
+
+`yarn start`
+
+###### Production mode
+
+`yarn build`
+
+###### Environment variables
+
+`N/A` (none)
+
 # Testing plan
 
 ## API
@@ -97,13 +114,13 @@ import { render, fireEvent, getByTestId } from "react-testing-library";
 
 1. Test the function that gives the value to the cards (`helpers/cardValueToNumericValue.helper.ts`). Test this function against all possible cards and their expected values using `expect()` and `.toBe()`
 2. Import `Deck` class and use the `.fetchTotal()` function. Make an array variable containing all the cards possible in the deck using the `.drawACard()` function first mocking the axios API response.
-3. Mock an array of drawn cards totalling 21; check score with `.getByText` and `Expect` it to be the length of the array. Check that the game state returns WINNING_STRING
-4. Mock an array of drawn cards totalling over 21; check the game state returns LOSING_STRING
+3. Mock an array of drawn cards totalling 21; check score with `.getByText` and `Expect` it to be the length of the array. Check that the game state returns `WINNING_STRING`
+4. Mock an array of drawn cards totalling over 21; check the game state returns `LOSING_STRING`
 
 
 > number of cards on the table is recorded as your high score.
 
-######Criteria
+######Criteria 
 
 1. Check the highscore variable change
 
