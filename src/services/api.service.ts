@@ -9,7 +9,7 @@ export default class Api {
     try {
       return await api.get(`deck/new/shuffle/?deck_count=${deckCount}`).json();
     } catch (e) {
-      return e;
+      console.log(e);
     }
   }
 
@@ -17,7 +17,7 @@ export default class Api {
     try {
       return await api.get(`deck/${deckId}/draw/?count=${amountOfCards}`).json();
     } catch (e) {
-      return e;
+      console.log(e);
     }
   }
 }

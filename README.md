@@ -1,47 +1,132 @@
-# Getting Started with Create React App
+# Testing plan
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## API
+*Mocking axios and requiring our services*
 
-## Available Scripts
+```
+const apiService = require('services/api.service');
+const axios = require('axios');`
 
-In the project directory, you can run:
+jest.mock('axios');
+```
 
-### `yarn start`
+*Checking the application works as intented with expected payload.*
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+1. Get a standard API response for endpoint from the documentation
+2. Feed the response into the `mockResolvedValue`
+3. Test against result (Updates state?)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+```
+const MOCKED_CARD_RESPONSE = . . . . . .;
 
-### `yarn test`
+it('returns a new card from the deck', async () => {
+  axios.get.mockResolvedValue({
+    data: {
+      . . . . 
+      // the data appropriate to use as a fixture
+    }
+  });
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+  const newCardFromDeck = await apiService.drawACard();
+  expect(newCardFromDeck).toEqual(MOCKED_CARD_RESPONSE);
+});
+```
 
-### `yarn build`
+*Checking the application gracefully handles an error response*
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+1. Get the returned error(s) from the documentation
+2. Feed error(s) into test
+3. Test against result (fires a function? Updates state? Tries again?)
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```
+const MOCKED_CARD_ERROR_RESPONSE = . . . . . .;
+const MOCKED_RETURN = . . . . . ;
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+it('returns a new card from the deck', async () => {
+  axios.get.mockResolvedValue(MOCKED_CARD_ERROR_RESPONSE);
 
-### `yarn eject`
+  const newCardFromDeck = await apiService.drawACard();
+  expect(newCardFromDeck).toEqual(MOCKED_RETURN);
+});
+```
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+*Checking debouncing / server load / etc.*
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+1. Make sure for every single request made a single response is given
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+```
+expect(axios.get).toHaveBeenCalledTimes(1);
+```
 
-## Learn More
+## Game rules
+Looking at the rules of the game I can pick out some good unit tests that could potentially be written:
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+> Add one card at a time from a deck to the board.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
-# 21-cards
+######Criteria
+
+1. One card at a time must be drawn
+2. Singular deck must be used
+3. Card must be rendered to the board
+
+######Tests
+
+1. Mock the return of the API service to something we expect to see based on the API documentation.
+2. Import the 'Deck' class to the test and run `Deck.drawACard(X)` function passing in a constant variabale as `X`. The result should return a single `Card` class.
+3. Using the methods from `react-testing-library` 
+
+```
+import { render, fireEvent, getByTestId } from "react-testing-library";
+```
+
+- Render the component
+- Fire a click event on the game button
+- Use getByTestId to get the `<CardContainer>`
+- Check the number of children expecting the number to have gone up by one.
+
+> If the total sums to 21 then you win; if you go over 21 you go bust!
+
+######Criteria
+
+1. Test the function that returns the sum of the cards dealt
+2. Test the game's state change once a score reaches 21
+3. Test the game's state change once a score passes 21
+
+######Tests
+
+1. Test the function that gives the value to the cards (`helpers/cardValueToNumericValue.helper.ts`). Test this function against all possible cards and their expected values using `expect()` and `.toBe()`
+2. Import `Deck` class and use the `.fetchTotal()` function. Make an array variable containing all the cards possible in the deck using the `.drawACard()` function first mocking the axios API response.
+3. Mock an array of drawn cards totalling 21; check score with `.getByText` and `Expect` it to be the length of the array. Check that the game state returns WINNING_STRING
+4. Mock an array of drawn cards totalling over 21; check the game state returns LOSING_STRING
+
+
+> number of cards on the table is recorded as your high score.
+
+######Criteria
+
+1. Check the highscore variable change
+
+######Tests
+
+1. Mock a winning hand with 5 cards
+2. Expect highscore DOM `.getByText` to equal 5
+
+> All face cards have a score of 10. Ace is 11. (Number cards have a score of said number).
+
+######Criteria
+
+* Use the helper function to test deck
+
+######Tests
+
+1. Import `cardValueToNumericValue.helper.ts`
+2. Using `expect` compare the value returned from the helper function with a function that checks for that value.
+
+```
+//               A   K   Q   J   
+const suitSum = [11, 10, 10, 10, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1].reduce((total, current) => total + current, 0);
+const suits = 4;
+const toCompare = suitSum * suits;
+```
+*There are better ways of getting this sum! (but this is clear for testing)*

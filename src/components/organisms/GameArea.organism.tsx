@@ -3,6 +3,9 @@ import styled from 'styled-components';
 import Card from "components/molecules/Card.molecule";
 import useDeck, { GAME_STATES } from "hooks/useDeck.hook";
 
+const WINNING_STRING = "You won!";
+const LOSING_STRING = "You went bust!";
+
 // COMPONENT
 export default function GameArea() {
   const {
@@ -22,9 +25,9 @@ export default function GameArea() {
   const displayGameState = () => {
     switch(gameState) {
       case GAME_STATES.WINNER:
-        return "You won!";
+        return WINNING_STRING;
       case GAME_STATES.BUST:
-        return "You went bust!";
+        return LOSING_STRING;
     }
   }
 
