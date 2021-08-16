@@ -9,13 +9,13 @@ export const GAME_STATES = {
   BUST: "bust",
   WINNER: "winner",
 };
-const INITIAL_STATE = <stateInstance> {
-  deck: null,
-  drawnCards: [],
-  valueTotal: 0,
-  score: 0,
-  highScore: 0,
-};
+const INITIAL_STATE = {
+	deck: null,
+	drawnCards: [],
+	valueTotal: 0,
+	score: 0,
+	highScore: 0
+} as stateInstance;
 
 export default function useDeck() {
   const [deck, setDeck] = React.useState(INITIAL_STATE.deck);

@@ -1,4 +1,4 @@
-import getRandomRange from "helpers/getRandomRange";
+import getRandomRange from "helpers/getRandomRange.helper";
 export default class Card {
   public id: string;
   public name: string;

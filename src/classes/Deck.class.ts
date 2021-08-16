@@ -5,7 +5,7 @@ import cardValueToNumericValue from "../helpers/cardValueToNumericValue.helper";
 export default class Deck {
   static async brandNewDeck(numberOfDecks: number): Promise<string> {
     try {
-      const res = <newDeckResponse> await api.getNewDeck(numberOfDecks);
+      const res = await api.getNewDeck(numberOfDecks) as newDeckResponse;
       return res.deck_id;
     } catch (e) {
       return e;
@@ -14,8 +14,8 @@ export default class Deck {
 
   static async drawACard(deckId: string): Promise<Card>  {
     try {
-      const res = <newCardResponse> await api.drawACard(deckId);
-      const { value, suit } = <cardObject>res.cards[0];
+      const res = await api.drawACard(deckId) as newCardResponse;
+      const { value, suit } = res.cards[0] as cardObject;
       return new Card(value, cardValueToNumericValue(value), suit);
     } catch (e) {
       return e;
